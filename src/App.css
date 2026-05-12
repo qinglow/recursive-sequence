@@ -1,0 +1,572 @@
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  --os-blue: #0000a8;
+  --os-gray: #c0c0c0;
+  --os-dark-gray: #808080;
+  --os-green: #388e3c;
+  --text-dark: #000000;
+  --text-light: #ffffff;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Courier Prime', monospace;
+  cursor: url('./assets/Seperate sprites/mouse.png'), default;
+}
+
+.desktop-container {
+  width: 100vw;
+  height: 100vh;
+  background-color: #3b82f6;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================
+   Desktop Icons (Strictly Left Alignment)
+   ========================================= */
+.icons-grid {
+  display: grid;
+  /* Auto flow column forces them to stack top-to-bottom on the left */
+  grid-template-columns: repeat(auto-fill, 80px);
+  grid-template-rows: repeat(auto-fill, 85px);
+  grid-auto-flow: column;
+  gap: 10px 20px;
+  padding: 20px 30px;
+  height: calc(100vh - 40px); /* Leave space for taskbar */
+  justify-content: start;
+}
+
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: url('./assets/Seperate sprites/tile021.png'), pointer;
+  text-align: center;
+  transition: transform 0.1s ease;
+}
+
+.desktop-icon:hover img {
+  filter: brightness(1.1);
+}
+
+/* Ensure SVG & PNGs perfectly match size without distortion */
+.desktop-icon img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain; 
+  image-rendering: pixelated;
+  margin-bottom: 5px;
+  transition: all 0.1s ease;
+}
+
+.desktop-icon:active img {
+  transform: translateY(2px) scale(0.95);
+  filter: brightness(0.8);
+}
+
+.desktop-icon span {
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+  user-select: none;
+  word-wrap: break-word;
+  word-break: break-word;
+  max-width: 70px;
+  line-height: 1.2;
+}
+
+/* =========================================
+   OS Window (Draggable Layout Updates)
+   ========================================= */
+.os-window {
+  position: absolute;
+  /* Removed transform & 50% top/left so absolute X/Y inline styles handle dragging perfectly */
+  width: clamp(300px, 90vw, 500px);
+  max-height: 80vh;
+  background: var(--os-gray); /* Match typical retro backgrounds */
+  border: 2px solid #fff;
+  border-right-color: #000;
+  border-bottom-color: #000;
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.window-header {
+  background: var(--os-blue);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  cursor: grab; /* Grab indicator */
+}
+
+.window-header:active {
+  cursor: grabbing;
+}
+
+.active-window .window-header {
+  background: #000080; /* Slightly darker to indicate active status */
+}
+
+.window-title {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+  pointer-events: none; /* Prevents text select while dragging */
+  user-select: none;
+}
+
+.window-controls {
+  display: flex;
+  gap: 2px;
+}
+
+.ctrl-btn {
+  width: 22px;
+  height: 22px;
+  background: var(--os-gray);
+  border: 1px solid #fff;
+  border-right-color: #000;
+  border-bottom-color: #000;
+  font-weight: bold;
+ cursor: url('./assets/Seperate sprites/tile021.png'), pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+.ctrl-btn.close-red {
+  background: #cc0000;
+  color: white;
+}
+
+.ctrl-btn:active,
+.ctrl-btn.close-red:active {
+  border: 1px solid #000;
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+}
+
+.window-content {
+  padding: 25px;
+  background: white;
+  color: var(--text-dark);
+  overflow-y: auto;
+  flex: 1;
+  border: 2px solid #fff;
+  border-left-color: #000;
+  border-top-color: #000;
+}
+
+/* =========================================
+   System Stats Specifics
+   ========================================= */
+.stats-body {
+  padding: 12px;
+  background: white;
+  font-size: clamp(10px, 1.2vw, 12px);
+  color: black;
+  line-height: 1.5;
+  border: 2px solid #fff;
+  border-left-color: #000;
+  border-top-color: #000;
+}
+
+.stats-body p {
+  margin: 0;
+}
+
+/* =========================================
+   Sticky Notes App
+   ========================================= */
+.sticky-content {
+  padding: 0;
+  background: #fff9b1; /* Classic yellow */
+}
+
+.sticky-textarea {
+  width: 100%;
+  height: 250px;
+  background: transparent;
+  border: none;
+  resize: none;
+  font-family: 'Courier Prime', monospace;
+  font-size: 14px;
+  padding: 15px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+/* =========================================
+   Sequence Master Styles
+   ========================================= */
+.main-title {
+  text-align: center;
+  color: var(--os-blue);
+  margin: 0 0 10px 0;
+  font-size: clamp(16px, 2vw, 18px);
+  letter-spacing: 1px;
+}
+
+.window-content hr {
+  border: 0;
+  border-top: 1px solid var(--os-gray);
+  margin-bottom: 20px;
+}
+
+.text-content h3 {
+  margin: 0 0 10px 0;
+  font-size: clamp(12px, 1.5vw, 14px);
+}
+
+.text-content p,
+.text-content ul {
+  font-size: clamp(11px, 1.2vw, 12px);
+  line-height: 1.5;
+}
+
+.text-content ul {
+  padding-left: 20px;
+}
+
+.text-content li {
+  margin-bottom: 8px;
+}
+
+.highlight {
+  color: var(--os-blue);
+  font-weight: bold;
+}
+
+.loading-section {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.segmented-progress-bar {
+  display: flex;
+  gap: 2px;
+  border: 2px solid var(--os-blue);
+  padding: 2px;
+  height: 24px;
+  width: min(90%, 400px);
+  margin: 0 auto 10px auto;
+  background: white;
+}
+
+.progress-block {
+  flex: 1;
+  background-color: transparent;
+}
+
+.progress-block.filled {
+  background-color: var(--os-blue);
+}
+
+.loading-text {
+  color: var(--os-blue);
+  font-weight: bold;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+/* =========================================
+   Taskbar
+   ========================================= */
+.taskbar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 35px;
+  background: var(--os-gray);
+  border-top: 2px solid #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  box-sizing: border-box;
+  z-index: 1000;
+  font-size: clamp(11px, 1.5vw, 13px);
+  overflow: visible; /* <--- CHANGED THIS */
+}
+
+.start-button {
+  background: var(--os-green);
+  color: white;
+  border: 2px solid #fff;
+  border-right-color: #000;
+  border-bottom-color: #000;
+  padding: 0 10px;
+  font-weight: bold;
+  cursor: url('./assets/Seperate sprites/tile021.png'), pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+}
+
+.start-button:active {
+  border: 2px solid #000;
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+}
+
+.taskbar-item {
+  margin-left: 8px;
+  padding: 0 clamp(8px, 1vw, 12px);
+  border: 2px solid #fff;
+  border-right-color: #000;
+  border-bottom-color: #000;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--os-gray);
+  cursor: url('./assets/Seperate sprites/tile021.png'), pointer;
+  font-weight: bold;
+  white-space: nowrap;
+  min-width: fit-content;
+}
+
+.taskbar-item.active {
+  border: 2px solid #000;
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+  background: #e0e0e0;
+  box-shadow: inset 1px 1px #000;
+}
+
+.taskbar-spacer {
+  flex-grow: 1;
+}
+
+.tray {
+  border: 2px solid var(--os-dark-gray);
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+  padding: 0 10px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* =========================================
+   Sequence Master Menu Styles
+   ========================================= */
+.sequence-app.menu-view {
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.sequence-menu-btn {
+  width: 100%;
+  padding: 12px 15px;
+  background: #c0c0c0; /* Classic OS Grey */
+  border: 2px solid #fff;
+  border-right-color: #000;
+  border-bottom-color: #000;
+  font-family: 'Courier Prime', monospace;
+  font-weight: bold;
+  font-size: 14px;
+  color: #000;
+  cursor: url('./assets/Seperate sprites/tile021.png'), pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  box-shadow: 1px 1px 0px rgba(0,0,0,0.2);
+}
+
+.sequence-menu-btn:active {
+  border: 2px solid #000;
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+  background: #e0e0e0;
+}
+
+/* =========================================
+   Lucas Sequence App Styles
+   ========================================= */
+.lucas-app {
+  background: #c0c0c0; /* Classic OS Grey */
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Info Header Box */
+.lucas-header-box {
+  background: #a9c4eb;
+  border: 2px solid #5588cc;
+  padding: 12px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.lucas-portrait {
+  width: 60px;
+  height: 75px;
+  background: #fff;
+  border: 1px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.lucas-info {
+  flex: 1;
+}
+
+/* Controls Box */
+.lucas-controls {
+  background: #ffffff;
+  border: 2px solid #808080;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.lucas-input {
+  width: 60px;
+  padding: 4px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 14px;
+  border: 2px solid #808080;
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+  background: #fff;
+  outline: none;
+}
+
+.lucas-btn {
+  background: #c0c0c0;
+  border: 2px solid #fff;
+  border-right-color: #000;
+  border-bottom-color: #000;
+  padding: 4px 15px;
+  font-family: 'Courier Prime', monospace;
+  font-weight: bold;
+  cursor: url('./assets/Seperate sprites/tile021.png'), pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lucas-btn:active:not(:disabled) {
+  border: 2px solid #000;
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+}
+
+.lucas-btn:disabled {
+  color: #808080;
+}
+
+/* Terminal Output Box */
+.lucas-terminal-container {
+  background: #c0c0c0;
+  padding: 2px;
+  border: 2px solid #808080;
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+}
+
+.lucas-terminal {
+  background: #f0f0f0;
+  border: 1px solid #000;
+  padding: 10px;
+  min-height: 120px;
+  font-size: 12px;
+}
+
+.blinking-cursor {
+  display: inline-block;
+  color: #0022a8;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* =========================================
+   Media Player Styles
+   ========================================= */
+.music-app-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background: var(--os-gray); /* Fills any leftover background */
+  padding: 10px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* 1. The Blue Screen */
+.music-screen {
+  background: var(--os-blue);
+  color: #fff;
+  text-align: center;
+  padding: 15px;
+  border: 2px solid #808080;
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+  width: 100%; /* Forces it to stretch */
+  box-sizing: border-box;
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* 2. The Control Bar */
+.music-controls {
+  background: #fff;
+  border: 2px solid #808080;
+  padding: 15px;
+  width: 100%; /* Forces it to stretch */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+/* 3. The Playlist Box */
+.music-playlist {
+  background: #fff;
+  border: 2px solid #808080;
+  width: 100%; /* Forces it to stretch */
+  box-sizing: border-box;
+  padding: 10px;
+  flex-grow: 1; /* Makes the playlist eat up any remaining vertical space */
+}
