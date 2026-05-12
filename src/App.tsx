@@ -455,7 +455,7 @@ function App() {
               }}>
                 <input 
                   type="range" 
-                  orient="vertical" /* <-- THIS FIXES FIREFOX & DRAG BEHAVIOR */
+                 {...{ orient: "vertical" }}
                   min="0" 
                   max="1" 
                   step="0.01" 
@@ -463,8 +463,8 @@ function App() {
                   onChange={(e) => setGlobalVolume(parseFloat(e.target.value))}
                   style={{ 
                     cursor: 'pointer',
-                    appearance: 'slider-vertical', 
-                    WebkitAppearance: 'slider-vertical', 
+                    appearance: 'slider-vertical' as any, 
+                    WebkitAppearance: 'slider-vertical' as any, 
                     width: '20px', 
                     height: '100px', 
                     margin: '0'
