@@ -40,10 +40,11 @@ const SequenceMaster: React.FC<SequenceMasterProps> = ({ appId, onRenameWindow, 
         <hr />
         <div className="text-content">
           <h3>Recursion</h3>
-          <p>A sequence a1, a2, a3, .... an, ... is called a recursive sequence if it is defined as follows:</p>
+          <p>A sequence a1, a2, a3, ..., an, ... is called a recursive sequence if it is defined as follows:</p>
           <ul>
-            <li>A number of terms of the sequence are given. These are the <span className="highlight">initial values</span>.</li>
-            <li>A rule called the recursion is given...</li>
+            <li>A number of terms of the sequence a1, a2, ..., ar are given. These are called the <span className="highlight">initial values</span>.</li>
+            <li>A rule called the recursion is given, which explains how an is computed in terms of previous terms in the sequence, <span className="highlight">if n &gt; r</span>.</li>
+            <li>The terms of a recursive sequence can be numbers, graphs, or other objects.</li>
           </ul>
         </div>
         <div className="loading-section">
