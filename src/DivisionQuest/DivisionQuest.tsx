@@ -41,9 +41,8 @@ const DivisionQuest: React.FC = () => {
   useEffect(() => {
     bgmRef.current = new Audio(bgmSfx);
     bgmRef.current.loop = true;
-    bgmRef.current.volume = 0.4; // Nice background volume
+    bgmRef.current.volume = 0.4; 
     
-    // Attempt to play immediately on launch
     bgmRef.current.play().catch(() => console.log("Waiting for user click to start BGM..."));
 
     return () => {
@@ -51,7 +50,6 @@ const DivisionQuest: React.FC = () => {
     };
   }, []);
 
-  // Guarantee the music starts upon any mouse click if the browser blocked the initial autoplay
   useEffect(() => {
     const startAudio = () => {
       if (!isGamePaused && bgmRef.current?.paused) {
@@ -62,7 +60,6 @@ const DivisionQuest: React.FC = () => {
     return () => document.removeEventListener('click', startAudio);
   }, [isGamePaused]);
 
-  // Pause BGM ONLY if the player explicitly hits Pause
   useEffect(() => {
     if (!isGamePaused) {
       bgmRef.current?.play().catch(() => {});
@@ -70,7 +67,6 @@ const DivisionQuest: React.FC = () => {
       bgmRef.current?.pause();
     }
   }, [isGamePaused]);
-
 
   const isInputInvalid = (input1 !== '' && parseInt(input1, 10) <= 0) || (input2 !== '' && parseInt(input2, 10) <= 0);
   const isComputeDisabled = input1 === '' || input2 === '' || isInputInvalid;
@@ -81,18 +77,16 @@ const DivisionQuest: React.FC = () => {
     }
   };
 
-  // --- PAUSE KEYBOARD LISTENER ---
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.key === 'p' || e.key === 'P' || e.key === 'Escape') && stage === 'GAME_RUNNING' && !isModalActive) {
+      if ((e.key === 'p' || e.key === 'P' || e.key === 'Escape') && stage === 'GAME_RUNNING') {
         setIsGamePaused(prev => !prev);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [stage, isModalActive]);
+  }, [stage]);
 
-  // --- LOADING SEQUENCE ---
   useEffect(() => {
     if (stage === 'LOADING_DIV' || stage === 'LOADING_EUC') {
       setLoadingProgress(0);
@@ -110,7 +104,6 @@ const DivisionQuest: React.FC = () => {
     }
   }, [stage]);
 
-  // --- TRIGGER COMPUTATION PROMPT ---
   const triggerMathEncounter = () => {
     new Audio(powerUpSfx).play().catch(() => {}); 
     setIsModalActive(true);
@@ -124,7 +117,6 @@ const DivisionQuest: React.FC = () => {
     setStage('GAME_OVER');
   }
 
-  // --- COMPUTE ALGORITHM (Matches PDF Logic) ---
   const handleCompute = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -167,7 +159,6 @@ const DivisionQuest: React.FC = () => {
   };
 
   const resumeRun = () => {
-    // WIN CONDITION CHECK (10 Blocks = Victory)
     if (blocksSolved >= 10) {
       setIsModalActive(false);
       setStage('GAME_WIN');
@@ -177,23 +168,30 @@ const DivisionQuest: React.FC = () => {
     }
   };
 
-  // eslint-disable-next-line no-inline-styles
+  // --- NEW: MASTER RESET FUNCTION ---
+  // Wipes all memory and returns to the start menu cleanly
+  const resetToMainMenu = () => {
+    setIsGamePaused(false);
+    setIsModalActive(false);
+    setShowSolution(false);
+    setBlocksSolved(0);
+    setInput1('');
+    setInput2('');
+    setMathProblem({ m: 0, n: 0, q: 0, r: 0, gcd: 0, lcm: 0, steps: [] });
+    setStage('MENU');
+  };
+
   return (
     <div className="division-quest-container" style={{ '--bg-sky': `url('${skyImg}')`, '--bg-waves': `url('${waveImg}')`, '--bg-ground': `url('${groundImg}')` } as React.CSSProperties & Record<string, string>}>
       
-      {/* --- MENU BACKGROUNDS --- */}
       {stage !== 'GAME_RUNNING' && (
         <>
-          {/* eslint-disable-next-line no-inline-styles */}
           <div className="bg-sky" style={{ backgroundImage: `url('${skyImg}')` }}></div>
-          {/* eslint-disable-next-line no-inline-styles */}
           <div className="bg-waves" style={{ backgroundImage: `url('${waveImg}')` }}></div>
-          {/* eslint-disable-next-line no-inline-styles */}
           <div className="bg-ground-static" style={{ backgroundImage: `url('${groundImg}')` }}></div>
         </>
       )}
 
-      {/* --- TOP HUD --- */}
       {stage === 'GAME_RUNNING' && (
         <div className="hud-top">
           <span className={`pixel-font hud-objective ${blocksSolved >= 10 ? 'completed' : ''}`}>
@@ -201,14 +199,12 @@ const DivisionQuest: React.FC = () => {
           </span>
           <div className="hud-controls">
             <button className="pixel-font hud-button" onClick={() => setIsGamePaused(true)}>PAUSE</button>
-            <button className="pixel-font hud-button exit" onClick={() => {setBlocksSolved(0); setStage('MENU');}}>EXIT</button>
           </div>
         </div>
       )}
 
       <div className="content-wrapper">
         
-        {/* --- MAIN MENU --- */}
         {stage === 'MENU' && (
           <div className="retro-modal animate-entrance">
             <div className="retro-modal-inner">
@@ -222,7 +218,6 @@ const DivisionQuest: React.FC = () => {
           </div>
         )}
 
-        {/* --- LOADING SCREENS --- */}
         {stage === 'LOADING_DIV' && (
           <div className="retro-modal animate-entrance">
             <div className="retro-modal-inner left-align">
@@ -237,7 +232,7 @@ const DivisionQuest: React.FC = () => {
                 <div className="progress-bar">
                   {[...Array(15)].map((_, i) => <div key={i} className={`progress-block ${i < loadingProgress ? 'filled' : ''}`} />)}
                 </div>
-                <p className="pixel-font loading-text">INITIALIZING ENV...</p>
+                <p className="pixel-font loading-text">LOADING...</p>
               </div>
             </div>
           </div>
@@ -264,19 +259,19 @@ const DivisionQuest: React.FC = () => {
                 <div className="progress-bar">
                   {[...Array(15)].map((_, i) => <div key={i} className={`progress-block ${i < loadingProgress ? 'filled' : ''}`} />)}
                 </div>
-                <p className="pixel-font loading-text">INITIALIZING ENV...</p>
+                <p className="pixel-font loading-text">LOADING...</p>
               </div>
             </div>
           </div>
         )}
 
-        {/* --- GAME OVER & WIN MODALS --- */}
+        {/* --- GAME OVER & WIN MODALS (USING NEW RESET LOGIC) --- */}
         {stage === 'GAME_OVER' && (
           <div className="retro-modal animate-entrance">
             <div className="retro-modal-inner">
               <h1 className="pixel-font modal-heading gameover">GAME OVER</h1>
               <p className="pixel-font modal-text">You hit an obstacle!<br/><br/>Blocks Solved: {blocksSolved}/10</p>
-              <button className="pixel-font menu-btn" onClick={() => { setBlocksSolved(0); setStage('MENU'); }}>MAIN MENU</button>
+              <button className="pixel-font menu-btn" onClick={resetToMainMenu}>MAIN MENU</button>
             </div>
           </div>
         )}
@@ -286,33 +281,30 @@ const DivisionQuest: React.FC = () => {
             <div className="retro-modal-inner">
               <h1 className="pixel-font modal-heading">VICTORY!</h1>
               <p className="pixel-font modal-text">You solved all 10 Algorithm Blocks!<br/><br/>Laboratory Exercise Complete.</p>
-              <button className="pixel-font menu-btn" onClick={() => { setBlocksSolved(0); setStage('MENU'); }}>MAIN MENU</button>
+              <button className="pixel-font menu-btn" onClick={resetToMainMenu}>MAIN MENU</button>
             </div>
           </div>
         )}
 
-        {/* --- CORE GAME ENGINE --- */}
         {stage === 'GAME_RUNNING' && (
           <div className="game-area">
             
-            {/* INSTRUCTIONS OVERLAY */}
             {!isModalActive && !isGamePaused && blocksSolved === 0 && (
-              <div className="pixel-font animate-entrance instructions-overlay">
+              <div className="pixel-font animate-entrance instructions-overlay" style={{ color: '#ffcc00' }}>
                 JUMP (SPACE/UP) TO AVOID OBSTACLES<br/><br/>HIT MYSTERY BLOCKS (?) TO ANSWER!
               </div>
             )}
 
-            {/* RUNNER ENGINE RECEIVES COMBINED PAUSE STATE */}
             <RunnerEngine isPaused={isModalActive || isGamePaused} onHitBox={triggerMathEncounter} onGameOver={triggerGameOver} />
 
-            {/* --- PAUSE MENU MODAL --- */}
-            {isGamePaused && !isModalActive && (
-              <div className="modal-overlay pause">
+            {/* --- PAUSE MENU MODAL (USING NEW RESET LOGIC) --- */}
+            {isGamePaused && (
+              <div className="modal-overlay pause" style={{ zIndex: 100 }}>
                 <div className="retro-modal animate-entrance pause-modal">
                   <div className="retro-modal-inner custom-padding">
                     <h1 className="pixel-font pause-heading">PAUSED</h1>
                     <button className="pixel-font menu-btn" onClick={() => setIsGamePaused(false)}>RESUME</button>
-                    <button className="pixel-font menu-btn" onClick={() => { setIsGamePaused(false); setBlocksSolved(0); setStage('MENU'); }}>QUIT TO MENU</button>
+                    <button className="pixel-font menu-btn" onClick={resetToMainMenu}>EXIT TO MENU</button>
                   </div>
                 </div>
               </div>

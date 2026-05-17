@@ -62,27 +62,33 @@ const RunnerEngine: React.FC<Props> = ({ isPaused, onHitBox, onGameOver }) => {
     });
   }, []);
 
-  // --- 2. DOUBLE JUMP MECHANIC ---
+  // --- NEW: REUSABLE JUMP FUNCTION ---
+  const triggerJump = () => {
+    if (!isPaused) {
+      const p = gameState.current.player;
+      if (p.jumpCount < 2) {
+        p.vy = -13.5; 
+        p.jumpCount++;
+        p.ticks = 0; 
+        
+        // --- PLAY JUMP SFX ---
+        const jumpSound = new Audio(jumpSfx);
+        jumpSound.play().catch(() => {}); 
+      }
+    }
+  };
+
+  // --- 2. DOUBLE JUMP MECHANIC (KEYBOARD) ---
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Space' || e.code === 'ArrowUp') {
         e.preventDefault(); 
-        if (!isPaused) {
-          const p = gameState.current.player;
-          if (p.jumpCount < 2) {
-            p.vy = -13.5; 
-            p.jumpCount++;
-            p.ticks = 0; 
-            
-            // --- PLAY JUMP SFX ---
-            const jumpSound = new Audio(jumpSfx);
-            jumpSound.play().catch(err => {}); 
-          }
-        }
+        triggerJump(); // Call the reusable jump function
       }
     };
     window.addEventListener('keydown', handleKeyDown, { passive: false });
     return () => window.removeEventListener('keydown', handleKeyDown);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPaused]);
 
   // --- 3. MAIN GAME LOOP ---
@@ -97,7 +103,6 @@ const RunnerEngine: React.FC<Props> = ({ isPaused, onHitBox, onGameOver }) => {
 
     const render = () => {
       // --- DYNAMIC RESOLUTION FIX ---
-      // This forces the Canvas to re-calculate its own width and height to match its container exactly!
       if (canvas.parentElement) {
         if (canvas.width !== canvas.parentElement.clientWidth) canvas.width = canvas.parentElement.clientWidth;
         if (canvas.height !== canvas.parentElement.clientHeight) canvas.height = canvas.parentElement.clientHeight;
@@ -263,7 +268,14 @@ const RunnerEngine: React.FC<Props> = ({ isPaused, onHitBox, onGameOver }) => {
   }, [assetsLoaded, isPaused, onHitBox, onGameOver]);
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
+    <div 
+      // ADDED: touchAction: 'none' prevents mobile browsers from scrolling/zooming when you tap
+      style={{ width: '100%', height: '100%', touchAction: 'none' }} 
+      
+      // ADDED: Touch and Mouse events trigger the jump!
+      onTouchStart={triggerJump} 
+      onMouseDown={triggerJump}
+    >
       {!assetsLoaded && <div className="pixel-font" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: '#fff' }}>Loading Sprites...</div>}
       <canvas 
         ref={canvasRef} 

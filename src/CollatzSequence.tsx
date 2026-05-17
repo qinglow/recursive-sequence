@@ -71,7 +71,7 @@ const CollatzSequence: React.FC = () => {
     bgmRef.current.volume = 0.4;
     
     // Attempt to play immediately on open
-    bgmRef.current.play().catch(e => console.log("Waiting for user click to start BGM..."));
+    bgmRef.current.play().catch(() => console.log("Waiting for user click to start BGM..."));
 
     return () => {
       // Pause and clean up the audio when the app is closed
@@ -83,7 +83,7 @@ const CollatzSequence: React.FC = () => {
   useEffect(() => {
     const startAudio = () => {
       if (bgmRef.current?.paused) {
-        bgmRef.current?.play().catch(e => {});
+        bgmRef.current?.play().catch(() => {});
       }
     };
     document.addEventListener('click', startAudio);
