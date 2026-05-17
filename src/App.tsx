@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
-import SequenceMaster from './SequenceMaster';
-import LucasSequence from './LucasSequence';
-import FibonacciSequence from './FibonacciSequence';
-import TribonacciSequence from './TribonacciSequence';
-import LinuxCLI from './LinuxCLI';     
-import MusicPlayer from './MusicPlayer'; 
+import { SleepIcon, PowerIcon, RestartIcon } from './SystemIcons';
+import SequenceMaster from './SequenceMaster/SequenceMaster';
+import LucasSequence from './SequenceMaster/LucasSequence';
+import FibonacciSequence from './SequenceMaster/FibonacciSequence';
+import TribonacciSequence from './SequenceMaster/TribonacciSequence';
+import LinuxCLI from './LinuxCLI';
+import MusicPlayer from './MusicPlayer';
+import CollatzSequence from './CollatzSequence';
+import DivisionQuest from './DivisionQuest/DivisionQuest';
+import { ShutdownScreen, SleepScreen, LoginScreen } from './OSScreens';
 
 // ==========================================
 // IMAGE IMPORTS 
@@ -21,19 +25,20 @@ import shakeIcon from './assets/Shake.png';
 import mySequencesIcon from './assets/Seperate sprites/app.png';
 import iceCreamIcon from './assets/IceCream.png';
 import trashIcon from './assets/Seperate sprites/recycle bin.png';
-import musicIconImg from './assets/Seperate sprites/video player.png';   
-import stickyIconImg from './assets/Seperate sprites/note.png'; 
-import docIconImg from './assets/Seperate sprites/word document.png';      
+import musicIconImg from './assets/Seperate sprites/video player.png';
+import stickyIconImg from './assets/Seperate sprites/note.png';
+import docIconImg from './assets/Seperate sprites/word document.png';
+import calculatorIcon from './assets/Seperate sprites/calculator.png'
+import collatzIconImg from './assets/bread-export.gif';
 // ==========================================
 
 const BACKGROUNDS = [
-  `url(${bgImg})`, 
-  '#008080', // Classic Windows 95 Teal
-  '#3a6ea5', // Deep OS Blue
-  '#55aa55'  // Retro Green
+  `url(${bgImg})`,
+  '#008080',
+  '#3a6ea5',
+  '#55aa55'
 ];
 
-// --- CUSTOM SVG ICONS FOR TASKBAR ---
 const StartIcon: React.FC = () => (
   <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect x="0" y="0" width="7" height="7" fill="white" />
@@ -70,7 +75,7 @@ const AsciiAnimation: React.FC<{ content: string }> = ({ content }) => {
   }, []);
 
   return (
-    <pre style={{ fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.2', color: '#000', marginTop: '15px', textAlign: 'left' }}>
+    <pre className="ascii-animation">
       {frames[frameIndex]}
     </pre>
   );
@@ -87,10 +92,11 @@ const SpeakerIcon: React.FC = () => (
 const renderIcon = (type: string) => {
   switch (type) {
     case 'terminal': return <TerminalIcon />;
-    case 'doc': return <img src={docIconImg} alt="doc" style={{ width: '14px', height: '14px', objectFit: 'contain' }} />;
-    case 'sticky': return <img src={stickyIconImg} alt="notes" style={{ width: '14px', height: '14px', objectFit: 'contain' }} />;
-    case 'music': return <img src={musicIconImg} alt="music" style={{ width: '14px', height: '14px', objectFit: 'contain' }} />;
-    default: return <img src={docIconImg} alt="doc" style={{ width: '14px', height: '14px', objectFit: 'contain' }} />;
+    case 'collatz': return <img src={collatzIconImg} alt="collatz" className="icon-small" />;
+    case 'doc': return <img src={docIconImg} alt="doc" className="icon-small" />;
+    case 'sticky': return <img src={stickyIconImg} alt="notes" className="icon-small" />;
+    case 'music': return <img src={musicIconImg} alt="music" className="icon-small" />;
+    default: return <img src={docIconImg} alt="doc" className="icon-small" />;
   }
 };
 
@@ -101,6 +107,7 @@ interface AppWindow {
   iconType: string;
   isActive: boolean;
   isMinimized: boolean;
+  isMaximized?: boolean;
   x: number;
   y: number;
   content?: string;
@@ -112,40 +119,52 @@ interface SysStats {
   temp: number;
 }
 
+// --- EXTRACTED DEFAULT STARTUP WINDOWS ---
+const getDefaultWindows = (): AppWindow[] => {
+  const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
+  const screenHeight = typeof window !== 'undefined' ? window.innerHeight : 768;
+
+  const statsX = Math.max(screenWidth - 270, 500);
+  const statsY = 20;
+
+  const cliWidth = 500;
+  const cliHeight = 350;
+  const cliX = Math.max(screenWidth - cliWidth - 20, 100);
+  const cliY = Math.max(screenHeight - cliHeight - 60, 100);
+
+  // Using Date.now() ensures unique IDs even upon restart
+  const runId = Date.now();
+
+  return [
+    { id: `stats-init-${runId}`, baseApp: 'stats', title: 'SYSTEM_STATS.LOG', iconType: 'terminal', isActive: false, isMinimized: false, x: statsX, y: statsY },
+    { id: `linux-cli-init-${runId}`, baseApp: 'linus-cli', title: 'hi!@FakeOS:~', iconType: 'terminal', isActive: true, isMinimized: false, x: cliX, y: cliY }
+  ];
+};
+
 function App() {
+  // --- OS STATE LOGIC ---
+  const [osState, setOsState] = useState<'login' | 'desktop' | 'sleep' | 'shutdown'>('login');
+  const [showStartMenu, setShowStartMenu] = useState(false);
+
   const [currentTime, setCurrentTime] = useState<string>('');
   const [sysStats, setSysStats] = useState<SysStats>({ cpu: 133, ram: '16.00', temp: 34 });
-  
-  // Volume state
-  const [globalVolume, setGlobalVolume] = useState<number>(0.5); 
+
+  const [globalVolume, setGlobalVolume] = useState<number>(0.5);
   const [showVolumeMenu, setShowVolumeMenu] = useState<boolean>(false);
 
   const [bgIndex, setBgIndex] = useState(0);
-  const [customBg, setCustomBg] = useState<string | null>(null); 
+  const [customBg, setCustomBg] = useState<string | null>(null);
   const [contextMenu, setContextMenu] = useState<{ show: boolean, x: number, y: number }>({ show: false, x: 0, y: 0 });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // UPDATED: Dynamically calculate starting positions
-  const [openWindows, setOpenWindows] = useState<AppWindow[]>(() => {
-    // Get screen width safely
-    const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
-    
-    return [
-      // Linux CLI positioned next to 2nd column of icons (x: 200) and middle of screen vertically (y: 150)
-      { id: 'linux-cli-init', baseApp: 'linus-cli', title: 'hi!@FakeOS:~', iconType: 'terminal', isActive: false, isMinimized: false, x: 200, y: 150 },
-      // System Stats perfectly aligned to top right
-      { id: 'stats-init', baseApp: 'stats', title: 'SYSTEM_STATS.LOG', iconType: 'terminal', isActive: true, isMinimized: false, x: Math.max(screenWidth - 270, 500), y: 20 }
-    ];
-  });
+  const [openWindows, setOpenWindows] = useState<AppWindow[]>(getDefaultWindows());
 
   const [stickyText, setStickyText] = useState<string>(() => {
     return localStorage.getItem('desktopStickyNote') || 'Type your notes here...';
   });
 
   const dragInfo = useRef<{ id: string | null; offsetX: number; offsetY: number }>({
-    id: null,
-    offsetX: 0,
-    offsetY: 0
+    id: null, offsetX: 0, offsetY: 0
   });
 
   useEffect(() => {
@@ -160,7 +179,7 @@ function App() {
 
   useEffect(() => {
     const isStatsOpen = openWindows.some(w => w.baseApp === 'stats' && !w.isMinimized);
-    if (isStatsOpen) {
+    if (isStatsOpen && osState === 'desktop') {
       const interval = setInterval(() => {
         setSysStats({
           cpu: Math.floor(130 + Math.random() * 8),
@@ -170,23 +189,36 @@ function App() {
       }, 1500);
       return () => clearInterval(interval);
     }
-  }, [openWindows]);
+  }, [openWindows, osState]);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMove = (e: MouseEvent | TouchEvent) => {
       if (dragInfo.current.id) {
         const { id, offsetX, offsetY } = dragInfo.current;
+
+        // Check if it's a touch event or mouse event
+        const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+        const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+
         setOpenWindows(prev => prev.map(w =>
-          w.id === id ? { ...w, x: e.clientX - offsetX, y: e.clientY - offsetY } : w
+          w.id === id ? { ...w, x: clientX - offsetX, y: clientY - offsetY } : w
         ));
       }
     };
-    const handleMouseUp = () => dragInfo.current.id = null;
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
+
+    const handleUp = () => dragInfo.current.id = null;
+
+    // Listen for both mouse and touch
+    document.addEventListener('mousemove', handleMove as EventListener);
+    document.addEventListener('mouseup', handleUp);
+    document.addEventListener('touchmove', handleMove as EventListener, { passive: false });
+    document.addEventListener('touchend', handleUp);
+
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('mousemove', handleMove as EventListener);
+      document.removeEventListener('mouseup', handleUp);
+      document.removeEventListener('touchmove', handleMove as EventListener);
+      document.removeEventListener('touchend', handleUp);
     };
   }, []);
 
@@ -199,10 +231,45 @@ function App() {
         );
       } else {
         const uniqueId = `${baseApp}-${Date.now()}`;
-        const offset = prev.length * 30;
+
+        const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
+        const screenHeight = typeof window !== 'undefined' ? window.innerHeight : 768;
+
+        let wWidth = 500;
+        let wHeight = 350;
+
+        if (baseApp === 'collatz') {
+          wWidth = 700;
+          wHeight = 550;
+        } else if (baseApp === 'loading') {
+          wWidth = 500;
+          wHeight = 350;
+        } else if (baseApp === 'stats') {
+          wWidth = 250;
+          wHeight = 350;
+        } else if (baseApp === 'lucas' || baseApp === 'fibonacci' || baseApp === 'tribonacci') {
+          wWidth = 500;
+          wHeight = 400;
+        }
+
+        const centerX = Math.max((screenWidth - wWidth) / 2, 0);
+        const centerY = Math.max((screenHeight - wHeight) / 2 - 20, 0);
+        const autoMaximize = baseApp === 'division-rpg';
+
         return [
           ...prev.map(w => ({ ...w, isActive: false })),
-          { id: uniqueId, baseApp, title: appTitle, iconType, isActive: true, isMinimized: false, x: 150 + offset, y: 100 + offset, content }
+          {
+            id: uniqueId,
+            baseApp,
+            title: appTitle,
+            iconType,
+            isActive: true,
+            isMinimized: false,
+            isMaximized: autoMaximize,
+            x: centerX,
+            y: centerY,
+            content
+          }
         ];
       }
     });
@@ -211,7 +278,7 @@ function App() {
   const handleRenameWindow = (appId: string, newTitle: string) => setOpenWindows(prev => prev.map(w => w.id === appId ? { ...w, title: newTitle } : w));
   const handleCloseApp = (appId: string) => setOpenWindows(openWindows.filter(w => w.id !== appId));
   const handleMinimizeApp = (appId: string) => setOpenWindows(prev => prev.map(w => w.id === appId ? { ...w, isMinimized: true, isActive: false } : w));
-  
+
   const handleTaskbarClick = (appId: string) => {
     setOpenWindows(prev => prev.map(w => {
       if (w.id === appId) return (w.isActive && !w.isMinimized) ? { ...w, isMinimized: true, isActive: false } : { ...w, isMinimized: false, isActive: true };
@@ -219,12 +286,22 @@ function App() {
     }));
   };
 
+  const handleMaximizeApp = (appId: string) => {
+    setOpenWindows(prev => prev.map(w =>
+      w.id === appId ? { ...w, isMaximized: !w.isMaximized } : w
+    ));
+  };
+
   const handleWindowInteraction = (appId: string) => setOpenWindows(prev => prev.map(w => ({ ...w, isActive: w.id === appId })));
 
-  const startDrag = (e: React.MouseEvent, appId: string) => {
+  const startDrag = (e: React.MouseEvent | React.TouchEvent, appId: string) => {
     const win = openWindows.find(w => w.id === appId);
     if (!win) return;
-    dragInfo.current = { id: appId, offsetX: e.clientX - win.x, offsetY: e.clientY - win.y };
+
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+
+    dragInfo.current = { id: appId, offsetX: clientX - win.x, offsetY: clientY - win.y };
     handleWindowInteraction(appId);
   };
 
@@ -234,7 +311,7 @@ function App() {
   };
 
   const handleContextMenu = (e: React.MouseEvent) => {
-    e.preventDefault(); 
+    e.preventDefault();
     const target = e.target as HTMLElement;
     if (target.classList.contains('desktop-container') || target.classList.contains('icons-grid')) {
       setContextMenu({ show: true, x: e.pageX, y: e.pageY });
@@ -243,6 +320,11 @@ function App() {
 
   const closeContextMenu = () => {
     if (contextMenu.show) setContextMenu({ show: false, x: 0, y: 0 });
+  };
+
+  const handleDesktopClick = () => {
+    closeContextMenu();
+    setShowStartMenu(false);
   };
 
   const cycleWallpaper = () => {
@@ -260,55 +342,63 @@ function App() {
     const file = e.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setCustomBg(`url(${imageUrl})`); 
+      setCustomBg(`url(${imageUrl})`);
     }
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  return (
-    <div 
-      className="desktop-container" 
-      style={{ background: customBg || BACKGROUNDS[bgIndex], backgroundSize: 'cover', backgroundPosition: 'center' }}
-      onContextMenu={handleContextMenu}
-      onClick={closeContextMenu}
-    >
+  // --- RESTART LOGIC ---
+  const handleRestart = () => {
+    setShowStartMenu(false);
+    setOpenWindows(getDefaultWindows()); // Restores your default Terminals!
+    setOsState('login');
+  };
 
-      <input 
-        type="file" 
-        accept="image/*" 
-        ref={fileInputRef} 
-        onChange={handleFileUpload} 
-        style={{ display: 'none' }} 
-      />
+  // ==========================================
+  // OS FULLSCREEN VIEWS (Power, Login, Sleep)
+  // ==========================================
+
+  if (osState === 'shutdown') {
+    return <ShutdownScreen onPowerOn={() => setOsState('login')} />;
+  }
+
+  if (osState === 'sleep') {
+    return <SleepScreen onWake={() => setOsState('login')} />;
+  }
+
+  if (osState === 'login') {
+    return <LoginScreen onLogin={() => setOsState('desktop')} bgImage={customBg || BACKGROUNDS[bgIndex]} />;
+  }
+
+  // ==========================================
+  // DESKTOP VIEW
+  // ==========================================
+
+  return (
+    // eslint-disable-next-line no-inline-styles
+    <div
+      className="desktop-container"
+      style={{
+        '--bg-image': `${customBg || BACKGROUNDS[bgIndex]}`,
+      } as React.CSSProperties & Record<string, string>}
+      onContextMenu={handleContextMenu}
+      onClick={handleDesktopClick}
+    >
+      <input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileUpload} className="hidden-file-input" aria-label="Upload wallpaper image" />
 
       {contextMenu.show && (
-        <div style={{
-          position: 'absolute',
-          top: contextMenu.y,
-          left: contextMenu.x,
-          background: '#c0c0c0',
-          border: '2px solid #fff',
-          borderRightColor: '#000',
-          borderBottomColor: '#000',
-          padding: '2px',
-          zIndex: 9999,
-          minWidth: '170px',
-          boxShadow: '2px 2px 0px rgba(0,0,0,0.5)'
-        }}>
-          <div 
-            onClick={cycleWallpaper}
-            style={{ padding: '6px 12px', cursor: 'pointer', fontSize: '12px', userSelect: 'none' }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = '#0000a8'; e.currentTarget.style.color = '#fff'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#000'; }}
-          >
+        // eslint-disable-next-line no-inline-styles
+        <div
+          className="context-menu"
+          style={{
+            '--menu-top': `${contextMenu.y}px`,
+            '--menu-left': `${contextMenu.x}px`,
+          } as React.CSSProperties & Record<string, string>}
+        >
+          <div className="context-menu-item" onClick={cycleWallpaper}>
             Next Preset Background
           </div>
-          <div 
-            onClick={handleCustomWallpaperClick}
-            style={{ padding: '6px 12px', cursor: 'pointer', fontSize: '12px', userSelect: 'none' }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = '#0000a8'; e.currentTarget.style.color = '#fff'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#000'; }}
-          >
+          <div className="context-menu-item" onClick={handleCustomWallpaperClick}>
             Set Custom Wallpaper...
           </div>
         </div>
@@ -324,8 +414,16 @@ function App() {
         <div className="desktop-icon" onClick={() => handleOpenApp('stats', 'SYSTEM_STATS.LOG', 'terminal')}><img src={avocadoIcon} alt="Avocado.txt" /><span>Sys Stats</span></div>
         <div className="desktop-icon" onClick={() => handleOpenApp('food', 'Shake.exe', 'doc', 'Shake')}><img src={shakeIcon} alt="Shake" /><span>Shake</span></div>
 
+        <div className="desktop-icon" onClick={() => handleOpenApp('collatz', 'Collatz Serve', 'collatz')}>
+          <img src={collatzIconImg} alt="Collatz" /><span>Collatz Serve</span>
+        </div>
+
+        <div className="desktop-icon" onClick={() => handleOpenApp('division-rpg', 'Division Quest', 'doc')}>
+          <img src={calculatorIcon} alt="Division RPG" /><span>Division Quest</span>
+        </div>
+
         <div className="desktop-icon" onClick={() => handleOpenApp('loading', 'system_loading.exe', 'doc')}>
-          <img src={mySequencesIcon} alt="My Sequences" /><span>My Sequences</span>
+          <img src={mySequencesIcon} alt="My Sequences" /><span>Sequence Master</span>
         </div>
 
         <div className="desktop-icon" onClick={() => handleOpenApp('music', 'Media Player', 'music')}>
@@ -339,34 +437,37 @@ function App() {
         <div className="desktop-icon trash-icon"><img src={trashIcon} alt="Trash" /><span>Trash</span></div>
       </div>
 
-    {/* Render All Open Windows */}
+      {/* Render All Open Windows */}
       {openWindows.map(app => {
         return (
+          // eslint-disable-next-line no-inline-styles
           <div
             key={app.id}
             className={`os-window ${app.isActive ? 'active-window' : ''}`}
             style={{
-              display: app.isMinimized ? 'none' : undefined, 
-              
-              left: `${app.x}px`,
-              top: `${app.y}px`,
-              zIndex: app.isActive ? 10 : 5,
-              width: app.baseApp === 'stats' ? '250px' : app.baseApp === 'linus-cli' ? '500px' : undefined
-            }}
+              display: app.isMinimized ? 'none' : 'flex',
+              '--window-left': app.isMaximized ? '0px' : `${app.x}px`,
+              '--window-top': app.isMaximized ? '0px' : `${app.y}px`,
+              '--window-width': app.isMaximized ? '100%' : (app.baseApp === 'stats' ? '250px' : app.baseApp === 'collatz' ? '700px' : app.baseApp === 'division-rpg' ? '680px' : '500px'),
+              '--window-height': app.isMaximized ? 'calc(100vh - 35px)' : (app.baseApp === 'collatz' ? '550px' : app.baseApp === 'division-rpg' ? '480px' : 'auto'),
+              '--window-max-height': app.isMaximized ? 'none' : 'none',
+              '--window-z-index': app.isActive ? '10' : '5',
+            } as React.CSSProperties & Record<string, string>}
             onMouseDown={(e) => startDrag(e, app.id)}
+            onTouchStart={(e) => startDrag(e, app.id)}
           >
             <div className="window-header">
               <div className="window-title">
                 <span className="window-icon">
-                  {app.baseApp === 'lucas' ? <span style={{ fontWeight: 'bold', color: '#000' }}>Σ</span> :
-                    app.baseApp === 'tribonacci' ? <span style={{ fontWeight: 'bold', color: '#fff' }}>#</span> :
+                  {app.baseApp === 'lucas' ? <span className="window-icon-text">Σ</span> :
+                    app.baseApp === 'tribonacci' ? <span className="window-icon-text white">#</span> :
                       renderIcon(app.iconType)}
                 </span>
                 {app.title}
               </div>
               <div className="window-controls" onMouseDown={(e) => e.stopPropagation()}>
                 <button className="ctrl-btn min" onClick={(e) => { e.stopPropagation(); handleMinimizeApp(app.id); }}>_</button>
-                <button className="ctrl-btn max">□</button>
+                <button className="ctrl-btn max" onClick={(e) => { e.stopPropagation(); handleMaximizeApp(app.id); }}>□</button>
                 {app.baseApp !== 'linus-cli' && (
                   <button className="ctrl-btn close-red" onClick={(e) => { e.stopPropagation(); handleCloseApp(app.id); }}>×</button>
                 )}
@@ -375,8 +476,8 @@ function App() {
 
             {/* Application Rendering Router */}
             {app.baseApp === 'food' && (
-              <div className="window-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100px' }}>
-                <h3 style={{ margin: 0, color: 'var(--os-blue)', textAlign: 'center' }}>I love that {app.content} ♥ ദ്ദി ˉ͈̀꒳ˉ͈́ )✧</h3>
+              <div className="window-content food-display">
+                <h3>I love that {app.content} ♥ ദ്ദി ˉ͈̀꒳ˉ͈́ ✧</h3>
                 <AsciiAnimation content={app.content || 'Snack'} />
               </div>
             )}
@@ -393,8 +494,10 @@ function App() {
             {app.baseApp === 'fibonacci' && <FibonacciSequence />}
             {app.baseApp === 'tribonacci' && <TribonacciSequence />}
             {app.baseApp === 'linus-cli' && <LinuxCLI />}
-            
-            {/* Added globalVolume prop right here */}
+            {app.baseApp === 'collatz' && <CollatzSequence />}
+
+            {app.baseApp === 'division-rpg' && <DivisionQuest />}
+
             {app.baseApp === 'music' && <MusicPlayer globalVolume={globalVolume} />}
 
             {app.baseApp === 'sticky' && (
@@ -408,73 +511,81 @@ function App() {
 
       {/* Bottom Taskbar */}
       <div className="taskbar">
-        <div className="start-button"><StartIcon /> Start</div>
-        <div className="taskbar-apps" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+
+        {/* --- START MENU BUTTON AND DROPDOWN --- */}
+        <div style={{ position: 'relative' }}>
+          {showStartMenu && (
+            <div style={{
+              position: 'absolute',
+              bottom: '100%',
+              left: '0',
+              backgroundColor: '#c0c0c0',
+              border: '2px solid #fff',
+              borderRightColor: '#888',
+              borderBottomColor: '#888',
+              padding: '2px',
+              display: 'flex',
+              flexDirection: 'column',
+              width: '180px',
+              zIndex: 1000,
+              boxShadow: '2px 2px 5px rgba(0,0,0,0.5)'
+            }}>
+              <div style={{ backgroundColor: '#0000aa', color: 'white', padding: '10px', fontWeight: 'bold', fontFamily: 'sans-serif' }}>
+                FakeOS
+              </div>
+              <div
+                onClick={() => { setShowStartMenu(false); setOsState('sleep'); }}
+                style={{ padding: '10px', cursor: 'pointer', borderBottom: '1px solid #999', display: 'flex', gap: '10px', alignItems: 'center' }}
+              >
+                <SleepIcon /> Sleep
+              </div>
+              <div
+                onClick={handleRestart}
+                style={{ padding: '10px', cursor: 'pointer', borderBottom: '1px solid #999', display: 'flex', gap: '10px', alignItems: 'center' }}
+              >
+                <RestartIcon /> Restart
+              </div>
+              <div
+                onClick={() => { setShowStartMenu(false); setOsState('shutdown'); }}
+                style={{ padding: '10px', cursor: 'pointer', display: 'flex', gap: '10px', alignItems: 'center' }}
+              >
+                <PowerIcon /> Shut Down
+              </div>
+            </div>
+          )}
+          <div className="start-button" onClick={(e) => { e.stopPropagation(); setShowStartMenu(!showStartMenu); }}>
+            <StartIcon /> Start
+          </div>
+        </div>
+
+        <div className="taskbar-apps">
           {openWindows.map(app => (
             <div key={app.id} className={`taskbar-item ${app.isActive && !app.isMinimized ? 'active' : ''}`} onClick={() => handleTaskbarClick(app.id)}>
               <span className="task-icon">
-                {app.baseApp === 'lucas' ? <span style={{ fontWeight: 'bold' }}>Σ</span> :
-                  app.baseApp === 'tribonacci' ? <span style={{ fontWeight: 'bold' }}>#</span> :
+                {app.baseApp === 'lucas' ? <span className="window-icon-text">Σ</span> :
+                  app.baseApp === 'tribonacci' ? <span className="window-icon-text">#</span> :
                     renderIcon(app.iconType)}
               </span> {app.title}
             </div>
           ))}
         </div>
         <div className="taskbar-spacer"></div>
-        
-       {/* TRAY WITH VOLUME CONTROL */}
+
+        {/* TRAY WITH VOLUME CONTROL */}
         <div className="tray">
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            
-           {/* Clickable Speaker Icon */}
-            <div 
-              onClick={() => setShowVolumeMenu(!showVolumeMenu)} 
-              style={{ cursor: 'pointer', display: 'flex', padding: '2px' }}
-            >
+          <div className="tray-volume-container">
+            <div className="tray-volume-icon" onClick={() => setShowVolumeMenu(!showVolumeMenu)}>
               <SpeakerIcon />
             </div>
-
-            {/* Vertical Volume Popup Menu */}
             {showVolumeMenu && (
-              <div style={{
-                position: 'absolute',
-                bottom: '100%',
-                right: '0',
-                background: '#c0c0c0',
-                border: '2px solid #fff',
-                borderRightColor: '#000',
-                borderBottomColor: '#000',
-                padding: '10px',
-                marginBottom: '4px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '10px',
-                zIndex: 9999,
-                boxShadow: '2px 2px 0px rgba(0,0,0,0.5)'
-              }}>
-                <input 
-                  type="range" 
-                 {...{ orient: "vertical" }}
-                  min="0" 
-                  max="1" 
-                  step="0.01" 
-                  value={globalVolume}
-                  onChange={(e) => setGlobalVolume(parseFloat(e.target.value))}
-                  style={{ 
-                    cursor: 'pointer',
-                    appearance: 'slider-vertical' as any, 
-                    WebkitAppearance: 'slider-vertical' as any, 
-                    width: '20px', 
-                    height: '100px', 
-                    margin: '0'
-                  }}
+              <div className="volume-menu">
+                <input type="range" {...{ orient: "vertical" }} min="0" max="1" step="0.01" value={globalVolume} onChange={(e) => setGlobalVolume(parseFloat(e.target.value))}
+                  className="volume-slider"
                 />
                 <SpeakerIcon />
               </div>
             )}
           </div>
-          
           <span className="time">{currentTime}</span>
         </div>
       </div>

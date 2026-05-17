@@ -1,0 +1,486 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* Typography */
+.pixel-font {
+  font-family: 'Press Start 2P', cursive;
+}
+
+.standard-font {
+  font-family: 'Courier Prime', monospace;
+}
+
+/* Animations */
+@keyframes smoothEntrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-entrance {
+  animation: smoothEntrance 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* Number input styling */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Main container */
+.division-quest-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #4aace6;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Background layers */
+.bg-sky {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-repeat: repeat;
+  background-size: auto 100%;
+  image-rendering: pixelated;
+  z-index: 0;
+}
+
+.bg-waves {
+  position: absolute;
+  bottom: 25%;
+  left: 0;
+  right: 0;
+  height: 35px;
+  background-repeat: repeat-x;
+  background-size: contain;
+  image-rendering: pixelated;
+  z-index: 3;
+}
+
+.bg-ground-static {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 25%;
+  background-repeat: repeat-x;
+  background-size: contain;
+  image-rendering: pixelated;
+  z-index: 2;
+}
+
+/* Top HUD */
+.hud-top {
+  background-color: #111;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+  border-bottom: 4px solid #000;
+}
+
+.hud-objective {
+  color: #fff;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.hud-objective.completed {
+  color: #55ff55;
+}
+
+.hud-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.hud-button {
+  color: #fff;
+  border: 2px solid #fff;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 8px 15px;
+  background-color: #1ea2eb;
+}
+
+.hud-button.exit {
+  background-color: #cc0000;
+}
+
+.hud-button:active {
+  transform: translate(1px, 1px);
+}
+
+/* Modal system */
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+
+.modal-overlay.pause {
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 40;
+}
+
+.modal-overlay.lab {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.retro-modal {
+  background-color: #1ea2eb;
+  border: clamp(4px, 1vw, 8px) solid #000;
+  position: relative;
+  width: 90%;
+  max-width: 680px;
+  max-height: 90%;
+  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.4);
+  color: #fff;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+
+.retro-modal.lab-division {
+  background-color: #0000aa;
+  width: 85%;
+  margin: 0;
+}
+
+.retro-modal.lab-euclidian {
+  background-color: #006600;
+  width: 85%;
+  margin: 0;
+}
+
+.retro-modal.win {
+  background-color: #55aa55;
+}
+
+.retro-modal.pause-modal {
+  width: auto;
+  margin: auto;
+}
+
+.retro-modal-inner {
+  border: clamp(4px, 1vw, 8px) dotted #fff;
+  margin: clamp(5px, 2vw, 15px);
+  padding: clamp(15px, 3vw, 40px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.retro-modal-inner.left-align {
+  align-items: flex-start;
+}
+
+.retro-modal-inner.custom-padding {
+  padding: 40px;
+}
+
+.retro-modal-inner.lab-padding {
+  padding: 25px;
+  align-items: flex-start;
+}
+
+/* Heading styles */
+.menu-heading {
+  font-size: clamp(24px, 5vw, 42px);
+  color: #fff;
+  text-shadow: 4px 4px 0px #000;
+  margin: 0 0 clamp(20px, 4vw, 50px) 0;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.loading-heading {
+  font-size: clamp(18px, 4vw, 28px);
+  color: #fff;
+  text-shadow: 3px 3px 0px #000;
+  margin-bottom: 25px;
+  text-align: center;
+  width: 100%;
+}
+
+.modal-heading {
+  font-size: clamp(24px, 4vw, 32px);
+  color: #fff;
+  text-shadow: 2px 2px 0px #000;
+  margin-bottom: 20px;
+}
+
+.modal-heading.gameover {
+  color: #ff3333;
+}
+
+.pause-heading {
+  font-size: 32px;
+  color: #fff;
+  text-shadow: 2px 2px 0px #000;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.lab-heading {
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Menu button */
+.menu-btn {
+  background-color: #fff;
+  color: #000;
+  border: clamp(2px, 0.5vw, 4px) solid #000;
+  width: 100%;
+  max-width: 450px;
+  padding: clamp(10px, 2vw, 20px);
+  margin: 8px 0;
+  font-size: clamp(10px, 1.5vw, 14px);
+  cursor: pointer;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.menu-btn:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+.menu-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.menu-btn.small {
+  max-width: 250px;
+  font-size: 12px;
+}
+
+.menu-btn.compute-btn {
+  padding: 15px;
+  max-width: 200px;
+  margin-top: 10px;
+}
+
+/* Menu controls text */
+.menu-controls-text {
+  margin-top: 30px;
+  font-size: 10px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* Description text */
+.loading-description {
+  font-size: clamp(12px, 2vw, 15px);
+  line-height: 1.8;
+  width: 100%;
+}
+
+.loading-description.euclidian {
+  font-size: clamp(11px, 1.8vw, 13px);
+  line-height: 1.6;
+}
+
+/* Paragraphs */
+.desc-paragraph {
+  margin-bottom: 10px;
+}
+
+.desc-paragraph.bold {
+  font-weight: bold;
+}
+
+.desc-paragraph.indented {
+  margin-left: 20px;
+}
+
+.desc-formula {
+  margin-left: 15px;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.desc-formula p {
+  margin: 0;
+}
+
+/* Game over/win text */
+.modal-text {
+  font-size: 12px;
+  margin-bottom: 40px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* Loading progress bar */
+.loading-footer {
+  margin-top: auto;
+  padding-top: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loading-footer.euclidian {
+  padding-top: 15px;
+}
+
+.progress-bar {
+  display: flex;
+  gap: 3px;
+  border: 3px solid #fff;
+  padding: 3px;
+  width: clamp(200px, 60%, 300px);
+  height: 24px;
+}
+
+.progress-block {
+  flex: 1;
+  background-color: transparent;
+}
+
+.progress-block.filled {
+  background-color: #fff;
+}
+
+.loading-text {
+  margin-top: 15px;
+  color: #fff;
+  font-size: 12px;
+}
+
+/* Game running area */
+.game-area {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  background-color: #8ed6ff;
+}
+
+/* Instructions overlay */
+.instructions-overlay {
+  position: absolute;
+  top: 20px;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  text-shadow: 2px 2px 0px #000;
+  font-size: 10px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Form styles */
+.lab-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+}
+
+.lab-inputs-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-end;
+}
+
+.lab-input-group {
+  display: flex;
+  align-items: center;
+}
+
+.lab-input-label {
+  font-size: 12px;
+  color: #ffff55;
+}
+
+.math-input {
+  width: 120px;
+  padding: 10px;
+  font-size: 16px;
+  background-color: #000;
+  border: 4px solid #fff;
+  color: #fff;
+  text-align: center;
+  outline: none;
+  margin-left: 15px;
+}
+
+.math-input:focus {
+  border-color: #ffff55;
+}
+
+.input-error {
+  color: #ff5555;
+  font-size: 10px;
+  margin-top: 10px;
+}
+
+/* Solution display */
+.solution-text {
+  width: 100%;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.solution-heading {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.solution-formula {
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.solution-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+/* Main container flex wrapper */
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}

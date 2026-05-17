@@ -23,7 +23,7 @@ html {
 .desktop-container {
   width: 100vw;
   height: 100vh;
-  background-color: #3b82f6;
+  background: var(--bg-image, #3b82f6);
   background-size: cover;
   background-position: center;
   position: relative;
@@ -91,9 +91,12 @@ html {
    ========================================= */
 .os-window {
   position: absolute;
-  /* Removed transform & 50% top/left so absolute X/Y inline styles handle dragging perfectly */
-  width: clamp(300px, 90vw, 500px);
-  max-height: 80vh;
+  left: var(--window-left, 0);
+  top: var(--window-top, 0);
+  width: var(--window-width, 500px);
+  height: var(--window-height, auto);
+  max-height: var(--window-max-height, 80vh);
+  z-index: var(--window-z-index, 5);
   background: var(--os-gray); /* Match typical retro backgrounds */
   border: 2px solid #fff;
   border-right-color: #000;
@@ -111,7 +114,8 @@ html {
   justify-content: space-between;
   align-items: center;
   padding: 4px 8px;
-  cursor: grab; /* Grab indicator */
+  cursor: grab;
+  touch-action: none;
 }
 
 .window-header:active {
@@ -173,6 +177,12 @@ html {
   border: 2px solid #fff;
   border-left-color: #000;
   border-top-color: #000;
+}
+
+.terminal-style, .stats-body, .linux-cli-body {
+  flex: 1;
+  min-height: 100%;
+  box-sizing: border-box;
 }
 
 /* =========================================
@@ -569,4 +579,143 @@ html {
   box-sizing: border-box;
   padding: 10px;
   flex-grow: 1; /* Makes the playlist eat up any remaining vertical space */
+}
+
+/* =========================================
+   Inline Styles Replaced with Classes
+   ========================================= */
+
+/* Hidden file input */
+.hidden-file-input {
+  display: none;
+}
+
+/* ASCII Animation */
+.ascii-animation {
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.2;
+  color: #000;
+  margin-top: 15px;
+  text-align: left;
+}
+
+/* Icon styles */
+.icon-small {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+}
+
+/* Context menu */
+.context-menu {
+  position: absolute;
+  top: var(--menu-top, 0);
+  left: var(--menu-left, 0);
+  background: #c0c0c0;
+  border: 2px solid #fff;
+  border-right-color: #000;
+  border-bottom-color: #000;
+  padding: 2px;
+  z-index: 9999;
+  min-width: 170px;
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+}
+
+.context-menu-item {
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  user-select: none;
+}
+
+.context-menu-item:hover {
+  background: #0000a8;
+  color: #fff;
+}
+
+/* Food display */
+.food-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+}
+
+.food-display h3 {
+  margin: 0;
+  color: var(--os-blue);
+  text-align: center;
+}
+
+/* Window icon styles */
+.window-icon-text {
+  font-weight: bold;
+  color: #000;
+}
+
+.window-icon-text.white {
+  color: #fff;
+}
+
+/* Taskbar apps container */
+.taskbar-apps {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Taskbar icon */
+.task-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tray volume section */
+.tray-volume-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.tray-volume-icon {
+  cursor: pointer;
+  display: flex;
+  padding: 2px;
+}
+
+/* Volume menu */
+.volume-menu {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  background: #c0c0c0;
+  border: 2px solid #fff;
+  border-right-color: #000;
+  border-bottom-color: #000;
+  padding: 10px;
+  margin-bottom: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 9999;
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+}
+
+.volume-slider {
+  cursor: pointer;
+  appearance: slider-vertical;
+  -webkit-appearance: slider-vertical;
+  width: 20px;
+  height: 100px;
+  margin: 0;
+}
+
+/* Time display */
+.time {
+  cursor: default;
+  user-select: none;
 }

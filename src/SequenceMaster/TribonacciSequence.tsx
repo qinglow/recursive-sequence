@@ -53,6 +53,7 @@ const TribonacciSequence: React.FC = () => {
       <div className="lucas-controls">
         <span>Sequence Term (n):</span>
         <input 
+        aria-label='ee'
           type="number" 
           value={targetTerm} 
           onChange={(e) => setTargetTerm(Number(e.target.value))}
