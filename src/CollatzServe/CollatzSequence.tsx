@@ -1,46 +1,46 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 // --- BACKGROUNDS & UI ---
-import curtainLeftImg from './assets/CollatzOmakase/cirtainLeft.png';
-import curtainRightImg from './assets/CollatzOmakase/cirtainRight.png';
-import bgImg from './assets/CollatzOmakase/bg.png'; 
+import curtainLeftImg from '../assets/CollatzOmakase/cirtainLeft.png';
+import curtainRightImg from '../assets/CollatzOmakase/cirtainRight.png';
+import bgImg from '../assets/CollatzOmakase/bg.png'; 
 
 // --- MUSIC IMPORT ---
-import bgmSfx from './assets/CollatzOmakase/Cooking Mama 3 Music - What Shall We Cook Today _.mp3';
+import bgmSfx from '../assets/CollatzOmakase/Cooking Mama 3 Music - What Shall We Cook Today _.mp3';
 
 // --- SUSHI IMPORTS ---
-import firstWin from './assets/CollatzOmakase/Sushi/FirstWin.png';
-import secondWin from './assets/CollatzOmakase/Sushi/SecondWin.png';
-import thirdWin from './assets/CollatzOmakase/Sushi/ThirdWin.png';
-import forthWin from './assets/CollatzOmakase/Sushi/ForthWin.png';
-import fifthWin from './assets/CollatzOmakase/Sushi/FifthWin.png';
-import sixthWin from './assets/CollatzOmakase/Sushi/SixthWin.png';
-import seventhWin from './assets/CollatzOmakase/Sushi/SeventhWin.png';
+import firstWin from '../assets/CollatzOmakase/Sushi/FirstWin.png';
+import secondWin from '../assets/CollatzOmakase/Sushi/SecondWin.png';
+import thirdWin from '../assets/CollatzOmakase/Sushi/ThirdWin.png';
+import forthWin from '../assets/CollatzOmakase/Sushi/ForthWin.png';
+import fifthWin from '../assets/CollatzOmakase/Sushi/FifthWin.png';
+import sixthWin from '../assets/CollatzOmakase/Sushi/SixthWin.png';
+import seventhWin from '../assets/CollatzOmakase/Sushi/SeventhWin.png';
 
 // --- DESSERT IMPORTS ---
-import d1 from './assets/CollatzOmakase/Desserts/BakewellTart.png';
-import d2 from './assets/CollatzOmakase/Desserts/BananaSplit.png';
-import d3 from './assets/CollatzOmakase/Desserts/BanoffeePot 1.png';
-import d4 from './assets/CollatzOmakase/Desserts/BerryWaffles.png';
-import d5 from './assets/CollatzOmakase/Desserts/BlueJelly.png';
-import d6 from './assets/CollatzOmakase/Desserts/CarrotCake.png';
-import d7 from './assets/CollatzOmakase/Desserts/Cheesecake.png';
-import d8 from './assets/CollatzOmakase/Desserts/ChocolateCake.png';
-import d9 from './assets/CollatzOmakase/Desserts/ChocolateDonut.png';
-import d10 from './assets/CollatzOmakase/Desserts/ChocolateSwissRoll.png';
-import d11 from './assets/CollatzOmakase/Desserts/Cinnamonroll.png';
-import d12 from './assets/CollatzOmakase/Desserts/CookieCheesecake.png';
-import d13 from './assets/CollatzOmakase/Desserts/Croissant 2.png';
-import d14 from './assets/CollatzOmakase/Desserts/FrenchFancies.png';
-import d15 from './assets/CollatzOmakase/Desserts/IceCreamWaffles.png';
-import d16 from './assets/CollatzOmakase/Desserts/LemonCake.png';
-import d17 from './assets/CollatzOmakase/Desserts/Macrons.png';
-import d18 from './assets/CollatzOmakase/Desserts/Pancakes 2.png';
-import d19 from './assets/CollatzOmakase/Desserts/RainbowCake.png';
-import d20 from './assets/CollatzOmakase/Desserts/RedVelvetCake.png';
-import d21 from './assets/CollatzOmakase/Desserts/StrawberryDonut.png';
-import d22 from './assets/CollatzOmakase/Desserts/Tirimasu.png';
-import d23 from './assets/CollatzOmakase/Desserts/Waffles.png';
+import d1 from '../assets/CollatzOmakase/Desserts/BakewellTart.png';
+import d2 from '../assets/CollatzOmakase/Desserts/BananaSplit.png';
+import d3 from '../assets/CollatzOmakase/Desserts/BanoffeePot 1.png';
+import d4 from '../assets/CollatzOmakase/Desserts/BerryWaffles.png';
+import d5 from '../assets/CollatzOmakase/Desserts/BlueJelly.png';
+import d6 from '../assets/CollatzOmakase/Desserts/CarrotCake.png';
+import d7 from '../assets/CollatzOmakase/Desserts/Cheesecake.png';
+import d8 from '../assets/CollatzOmakase/Desserts/ChocolateCake.png';
+import d9 from '../assets/CollatzOmakase/Desserts/ChocolateDonut.png';
+import d10 from '../assets/CollatzOmakase/Desserts/ChocolateSwissRoll.png';
+import d11 from '../assets/CollatzOmakase/Desserts/Cinnamonroll.png';
+import d12 from '../assets/CollatzOmakase/Desserts/CookieCheesecake.png';
+import d13 from '../assets/CollatzOmakase/Desserts/Croissant 2.png';
+import d14 from '../assets/CollatzOmakase/Desserts/FrenchFancies.png';
+import d15 from '../assets/CollatzOmakase/Desserts/IceCreamWaffles.png';
+import d16 from '../assets/CollatzOmakase/Desserts/LemonCake.png';
+import d17 from '../assets/CollatzOmakase/Desserts/Macrons.png';
+import d18 from '../assets/CollatzOmakase/Desserts/Pancakes 2.png';
+import d19 from '../assets/CollatzOmakase/Desserts/RainbowCake.png';
+import d20 from '../assets/CollatzOmakase/Desserts/RedVelvetCake.png';
+import d21 from '../assets/CollatzOmakase/Desserts/StrawberryDonut.png';
+import d22 from '../assets/CollatzOmakase/Desserts/Tirimasu.png';
+import d23 from '../assets/CollatzOmakase/Desserts/Waffles.png';
 
 const SUSHI_MENU = [firstWin, secondWin, thirdWin, forthWin, fifthWin, sixthWin, seventhWin];
 const DESSERT_MENU = [d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, d15, d16, d17, d18, d19, d20, d21, d22, d23];
@@ -118,32 +118,41 @@ const CollatzSequence: React.FC = () => {
     }
   }, [stage]);
 
-  // --- NEW: AUTO-CALCULATE LOGIC ---
+  // 3. AUTO-CALCULATE LOGIC
   useEffect(() => {
+    // If the input value is empty, clear the sequence and return early
     if (inputValue === '') {
       setSequence([]);
       return;
     }
 
+    // Parse the input string to an integer base 10
     const current = parseInt(inputValue, 10);
     
-    // Check for invalid input
+    // Check for invalid input: if not a number or not positive, set sequence to [-1] representing 'INVALID'
     if (isNaN(current) || current <= 0) {
       setSequence([-1]); // -1 represents 'INVALID'
       return;
     }
     
     // Calculate valid sequence
+    // Initialize the sequence array with the starting number
     let tempSequence: number[] = [current];
+    // Start with the input number
     let num = current;
+    // Loop until we reach 1 (the termination point of the Collatz sequence)
     while (num !== 1) {
+      // If the current number is even, divide it by 2
       if (num % 2 === 0) num = num / 2;
+      // If the current number is odd, apply the rule: multiply by 3 and add 1
       else num = (num * 3) + 1;
+      // Add the new number to the sequence
       tempSequence.push(num);
     }
     
+    // Update the sequence state with the calculated Collatz sequence
     setSequence(tempSequence);
-  }, [inputValue]); // Runs every time inputValue changes!
+  }, [inputValue]); 
 
   const generateReceiptData = () => {
     const now = new Date();
@@ -209,6 +218,18 @@ const CollatzSequence: React.FC = () => {
             background-position: 0 0, 10px 0;
           }
 
+          /* Custom Scrollbar for Receipt */
+          .receipt-scroll::-webkit-scrollbar {
+            width: 6px;
+          }
+          .receipt-scroll::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          .receipt-scroll::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 4px;
+          }
+
           .arcade-btn {
             background-color: #cc0000;
             color: #fff;
@@ -226,6 +247,25 @@ const CollatzSequence: React.FC = () => {
             border-color: #333;
             color: #888;
             cursor: not-allowed;
+          }
+
+          /* Responsive Flex Layout */
+          .responsive-order-panel {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            justify-content: center;
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+            flex-wrap: wrap; /* Enables stacking on mobile */
+            padding: 20px;
+            box-sizing: border-box;
+          }
+
+          @media (max-width: 650px) {
+            .title-text { font-size: 28px !important; }
+            .responsive-order-panel { gap: 20px; }
           }
         `}
       </style>
@@ -254,7 +294,7 @@ const CollatzSequence: React.FC = () => {
       {/* --- TITLE SCREEN --- */}
       {stage === 'TITLE' && (
         <div className="animate-entrance" style={{ zIndex: 10, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', margin: 'auto' }}>
-          <h1 className="pixel-font" style={{ fontSize: '38px', color: '#b30000', textShadow: '4px 4px 0px #fff, -4px -4px 0px #fff, 4px -4px 0px #fff, -4px 4px 0px #fff, 0px 4px 0px #fff, 0px -4px 0px #fff, 4px 0px 0px #fff, -4px 0px 0px #fff', margin: '0 0 40px 0', lineHeight: '1.4' }}>
+          <h1 className="pixel-font title-text" style={{ fontSize: '38px', color: '#b30000', textShadow: '4px 4px 0px #fff, -4px -4px 0px #fff, 4px -4px 0px #fff, -4px 4px 0px #fff, 0px 4px 0px #fff, 0px -4px 0px #fff, 4px 0px 0px #fff, -4px 0px 0px #fff', margin: '0 0 40px 0', lineHeight: '1.4' }}>
             COLLATZ<br/>EATS
           </h1>
           <button className="pixel-font arcade-btn" onClick={handleStart} style={{ border: '6px solid #fff', borderRadius: '15px', padding: '18px 35px', fontSize: '24px' }}>START</button>
@@ -274,7 +314,7 @@ const CollatzSequence: React.FC = () => {
           display: 'flex', 
           flexDirection: 'column', 
           alignItems: 'center', 
-          padding: '40px 50px',
+          padding: '40px 30px',
           boxSizing: 'border-box', 
           color: '#4a3b2c',
           margin: 'auto'
@@ -294,8 +334,8 @@ const CollatzSequence: React.FC = () => {
             </ul>
           </div>
           
-          <div style={{ marginTop: '30px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ display: 'flex', gap: '2px', border: '3px solid #8c6b4a', padding: '2px', width: '250px', height: '22px', backgroundColor: '#fff' }}>
+          <div style={{ marginTop: '30px', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+            <div style={{ display: 'flex', gap: '2px', border: '3px solid #8c6b4a', padding: '2px', width: '100%', maxWidth: '250px', height: '22px', backgroundColor: '#fff', boxSizing: 'border-box' }}>
               {[...Array(15)].map((_, i) => <div key={i} style={{ flex: 1, backgroundColor: i < loadingProgress ? '#8c6b4a' : 'transparent' }} />)}
             </div>
             <p className="pixel-font" style={{ marginTop: '15px', color: '#8c6b4a', fontSize: '10px' }}>LOADING...</p>
@@ -306,10 +346,10 @@ const CollatzSequence: React.FC = () => {
 
       {/* --- GAME STAGE: RECEIPT & ORDER PANEL --- */}
       {stage === 'ORDER' && (
-        <div className="animate-entrance" style={{ zIndex: 10, display: 'flex', gap: '40px', alignItems: 'center', justifyContent: 'center', width: '100%', margin: 'auto' }}>
+        <div className="animate-entrance responsive-order-panel" style={{ zIndex: 10 }}>
           
           {/* RECEIPT */}
-          <div className="receipt-paper standard-font" style={{ width: '320px', minHeight: '380px', padding: '30px 20px', color: '#000', boxShadow: '0px 15px 25px rgba(0,0,0,0.4)', boxSizing: 'border-box' }}>
+          <div className="receipt-paper standard-font" style={{ width: '100%', maxWidth: '320px', padding: '30px 20px', color: '#000', boxShadow: '0px 15px 25px rgba(0,0,0,0.4)', boxSizing: 'border-box' }}>
             <h3 className="pixel-font" style={{ textAlign: 'center', margin: '0 0 10px 0', fontSize: '12px', color: '#000' }}>COLLATZ EATS</h3>
             <p style={{ textAlign: 'center', fontSize: '9px', margin: '0 0 20px 0' }}>{currentDate}</p>
             
@@ -322,7 +362,7 @@ const CollatzSequence: React.FC = () => {
             
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', borderBottom: '1px dotted #ccc', paddingBottom: '10px', marginBottom: '10px' }}>
               <span>Input Initial Value</span>
-              <strong>{inputValue || '---'}</strong>
+              <strong>{inputValue ? parseInt(inputValue, 10).toLocaleString('en-US') : '---'}</strong>
             </div>
 
             <div style={{ minHeight: '60px' }}>
@@ -332,7 +372,14 @@ const CollatzSequence: React.FC = () => {
               {sequence.length > 0 && sequence[0] !== -1 && (
                 <div style={{ fontSize: '11px' }}>
                   <p style={{ margin: '10px 0 10px 0' }}>The Collatz sequence are:</p>
-                  <p className="pixel-font" style={{ textAlign: 'right', lineHeight: '1.8', fontSize: '9px' }}>{sequence.join(', ')}</p>
+                  
+                  {/* FIXED: Scrollable area with word-break for long sequences + formatting */}
+                  <div className="receipt-scroll" style={{ maxHeight: '120px', overflowY: 'auto', paddingRight: '5px' }}>
+                    <p className="pixel-font" style={{ textAlign: 'right', lineHeight: '1.8', fontSize: '9px', wordBreak: 'break-word', margin: 0 }}>
+                      {sequence.map(num => num.toLocaleString('en-US')).join(', ')}
+                    </p>
+                  </div>
+
                 </div>
               )}
             </div>
@@ -344,8 +391,8 @@ const CollatzSequence: React.FC = () => {
           </div>
 
           {/* ORDER PANEL */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <div style={{ backgroundColor: '#4a2f3f', padding: '25px 20px', width: '280px', border: '6px solid #1c1118', boxSizing: 'border-box', boxShadow: '5px 5px 0px rgba(0,0,0,0.3)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%', maxWidth: '280px' }}>
+            <div style={{ backgroundColor: '#4a2f3f', padding: '25px 20px', width: '100%', border: '6px solid #1c1118', boxSizing: 'border-box', boxShadow: '5px 5px 0px rgba(0,0,0,0.3)' }}>
               
               {/* --- MENU TOGGLE --- */}
               <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
@@ -365,9 +412,18 @@ const CollatzSequence: React.FC = () => {
               <div style={{ display: 'flex', alignItems: 'center', color: '#fff', borderBottom: '2px solid #fff', paddingBottom: '5px' }}>
                 <span className="pixel-font" style={{ fontSize: '28px', marginRight: '10px' }}>$</span>
                 <input 
-                  type="number" 
-                  value={inputValue}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
+                  type="text" 
+                  inputMode="numeric"
+                  value={inputValue ? parseInt(inputValue, 10).toLocaleString('en-US') : ''}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    // Strip commas to get the raw number
+                    const rawValue = e.target.value.replace(/,/g, '');
+                    
+                    // Only allow digits, and prevent absurdly long numbers from freezing the browser limits
+                    if (/^\d*$/.test(rawValue) && rawValue.length <= 15) {
+                      setInputValue(rawValue);
+                    }
+                  }}
                   className="pixel-font"
                   style={{ backgroundColor: 'transparent', border: 'none', color: '#fff', fontSize: '28px', width: '100%', outline: 'none' }}
                   placeholder="0"
@@ -379,7 +435,7 @@ const CollatzSequence: React.FC = () => {
             <div style={{ display: 'flex', gap: '10px' }}>
               <button 
                 onClick={handleServe}
-                disabled={sequence.length === 0 || sequence[0] === -1} // Disabled if there's no valid sequence!
+                disabled={sequence.length === 0 || sequence[0] === -1} 
                 className="arcade-btn"
                 style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
                 <span className="pixel-font" style={{ fontSize: '20px' }}>SERVE</span>
@@ -413,7 +469,7 @@ const CollatzSequence: React.FC = () => {
             } 
           />
 
-          <div style={{ display: 'flex', gap: '30px', marginTop: '40px' }}>
+          <div style={{ display: 'flex', gap: '30px', marginTop: '40px', flexWrap: 'wrap', justifyContent: 'center' }}>
             <button onClick={handleContinue} className="pixel-font arcade-btn" style={{ padding: '20px 40px', fontSize: '16px', borderRadius: '10px' }}>CONTINUE</button>
             <button onClick={() => setStage('DONE')} className="pixel-font arcade-btn" style={{ padding: '20px 40px', fontSize: '16px', borderRadius: '10px', backgroundColor: '#333', borderColor: '#111' }}>END</button>
           </div>
@@ -424,7 +480,7 @@ const CollatzSequence: React.FC = () => {
       {/* --- DONE STAGE: THANK YOU --- */}
       {stage === 'DONE' && (
         <div className="animate-entrance" style={{ zIndex: 10, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', margin: 'auto' }}>
-          <h2 className="pixel-font" style={{ color: '#fff', fontSize: '36px', textShadow: '4px 4px 0px #000', marginBottom: '40px', letterSpacing: '2px' }}>THANK YOU!</h2>
+          <h2 className="pixel-font" style={{ color: '#fff', fontSize: '36px', textShadow: '4px 4px 0px #000', marginBottom: '40px', letterSpacing: '2px', textAlign: 'center' }}>THANK YOU!</h2>
 
           <button 
             onClick={resetGame}
@@ -438,3 +494,4 @@ const CollatzSequence: React.FC = () => {
 };
 
 export default CollatzSequence;
+

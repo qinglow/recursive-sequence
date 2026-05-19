@@ -118,43 +118,67 @@ const DivisionQuest: React.FC = () => {
   }
 
   const handleCompute = (e: React.FormEvent) => {
+    // Prevent the default form submission behavior
     e.preventDefault();
     
+    // Parse the first input string to an integer with base 10
     const val1 = parseInt(input1, 10);
+    // Parse the second input string to an integer with base 10
     const val2 = parseInt(input2, 10);
 
+    // Validate inputs: return early if either is NaN or not positive
     if (isNaN(val1) || isNaN(val2) || val1 <= 0 || val2 <= 0) return;
 
+    // Assign the larger value to m (the dividend for division algorithm)
     const m = Math.max(val1, val2);
+    // Assign the smaller value to n (the divisor for division algorithm)
     const n = Math.min(val1, val2);
 
+    // Check the current game mode to determine which algorithm to execute
     if (gameMode === 'division') {
+      // DIVISION ALGORITHM: Calculate quotient by dividing m by n and flooring the result
       const q = Math.floor(m / n);
+      // DIVISION ALGORITHM: Calculate remainder using the modulo operator
       const r = m % n;
+      // Store the division results in the math problem state (q and r are the key results)
       setMathProblem({ m, n, q, r, gcd: 0, lcm: 0, steps: [] });
     } else {
+      // EUCLIDEAN ALGORITHM: Initialize copies of m and n for iterative computation
       let tempM = m;
       let tempN = n;
+      // Initialize an array to store each step of the algorithm for display
       let steps = [];
       
+      // Loop while the divisor (tempN) is greater than 0
       while (tempN > 0) {
+        // Calculate the quotient for this iteration of division
         const q = Math.floor(tempM / tempN);
+        // Calculate the remainder for this iteration of division
         const r = tempM % tempN;
+        // If remainder is 0, the divisor is the GCD—format without the remainder term
         if (r === 0) {
           steps.push(`${tempM} = ${tempN}(${q})`);
         } else {
+          // Otherwise, format the equation with both quotient and remainder
           steps.push(`${tempM} = ${tempN}(${q}) + ${r}`);
         }
+        // Update for next iteration: current divisor becomes the new dividend
         tempM = tempN;
+        // The remainder becomes the new divisor for the next iteration
         tempN = r;
       }
       
+      // After the loop, tempM holds the greatest common divisor (GCD)
       const gcd = tempM;
+      // Calculate the least common multiple using the formula: lcm(m,n) = (m * n) / gcd(m,n)
       const lcm = (m * n) / gcd;
+      // Store the Euclidean algorithm results including all steps and calculated values
       setMathProblem({ m, n, q: 0, r: 0, gcd, lcm, steps });
     }
 
+    // Increment the count of solved blocks to track progress toward the 10-block goal
     setBlocksSolved(prev => prev + 1);
+    // Set the flag to display the solution on the screen
     setShowSolution(true); 
   };
 

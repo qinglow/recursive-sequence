@@ -7,7 +7,7 @@ import FibonacciSequence from './SequenceMaster/FibonacciSequence';
 import TribonacciSequence from './SequenceMaster/TribonacciSequence';
 import LinuxCLI from './LinuxCLI';
 import MusicPlayer from './MusicPlayer';
-import CollatzSequence from './CollatzSequence';
+import CollatzSequence from './CollatzServe/CollatzSequence';
 import DivisionQuest from './DivisionQuest/DivisionQuest';
 import { ShutdownScreen, SleepScreen, LoginScreen } from './OSScreens';
 
