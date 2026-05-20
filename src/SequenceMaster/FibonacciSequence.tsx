@@ -5,8 +5,17 @@ const FibonacciSequence: React.FC = () => {
     const [targetTerm, setTargetTerm] = useState<number>(10);
     const [computedSequence, setComputedSequence] = useState<string>('');
     const [isComputing, setIsComputing] = useState<boolean>(false);
+    const [isInvalid, setIsInvalid] = useState<boolean>(false);
 
     const handleCompute = () => {
+        // Check if input is invalid (less than 2)
+        if (targetTerm < 2) {
+            setIsInvalid(true);
+            setComputedSequence('');
+            return;
+        }
+        
+        setIsInvalid(false);
         // Set the loading state to true to disable the button and show processing UI
         setIsComputing(true);
         // Clear the previous computed sequence to make room for the new result
@@ -87,6 +96,11 @@ const FibonacciSequence: React.FC = () => {
                     <div style={{ color: '#0022a8', fontWeight: 'bold' }}>C:\SYSTEM\FIBONACCI.EXE --RUN</div>
                     <div style={{ color: '#4caf50', margin: '5px 0' }}>{'>'} Initializing calculation...</div>
 
+                    {isInvalid && (
+                        <div style={{ marginTop: '10px', color: 'red', fontWeight: 'bold' }}>
+                            INVALID OUTPUT
+                        </div>
+                    )}
                     {computedSequence && (
                         <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                             <div>The Fibonacci sequence up to term {targetTerm}:</div>

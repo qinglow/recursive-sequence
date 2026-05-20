@@ -126,12 +126,19 @@ const CollatzSequence: React.FC = () => {
       return;
     }
 
+    
+
     // Parse the input string to an integer base 10
     const current = parseInt(inputValue, 10);
     
     // Check for invalid input: if not a number or not positive, set sequence to [-1] representing 'INVALID'
     if (isNaN(current) || current <= 0) {
       setSequence([-1]); // -1 represents 'INVALID'
+      return;
+    }
+
+    if(current % 2 == 0){
+      setSequence([-1]);
       return;
     }
     
