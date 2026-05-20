@@ -34,13 +34,13 @@ const TribonacciSequence: React.FC = () => {
       if (targetTerm >= 2) seq.push(1n);
       
       // Loop starts at 3, adds the previous THREE terms safely
-      for (let i = 3; i <= targetTerm; i++) {
+      for (let i = 3; i <= targetTerm-1; i++) {
         // Each new number is the sum of the previous three numbers in the sequence
         seq.push(seq[i - 1] + seq[i - 2] + seq[i - 3]);
       }
       
-      // Maps terms through toLocaleString to get correct thousands/millions commas
-      setComputedSequence(seq.map(num => num.toLocaleString('en-US')).join(', '));
+      // Maps terms through toString to get plain numbers
+      setComputedSequence(seq.map(num => num.toString()).join(', '));
       // Set the loading state to false to re-enable the button and indicate processing is complete
       setIsComputing(false);
     }, 400);
@@ -70,7 +70,7 @@ const TribonacciSequence: React.FC = () => {
 
       {/* Controls Section */}
       <div className="lucas-controls" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center', marginTop: '15px' }}>
-        <span>Sequence Term (n):</span>
+        <span>Sequence Term:</span>
         <input 
           aria-label='Target Term'
           type="number" 
@@ -103,7 +103,7 @@ const TribonacciSequence: React.FC = () => {
           )}
           {computedSequence && (
             <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-              <div>The Tribonacci sequence up to term {targetTerm}:</div>
+              <div>The Tribonacci sequence are:</div>
               
               {/* FIX 4: Added max-height scrollbox bounding box and text line-breaking rules */}
               <div style={{ 

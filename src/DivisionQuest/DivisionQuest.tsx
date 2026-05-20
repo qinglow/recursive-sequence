@@ -50,6 +50,7 @@ const DivisionQuest: React.FC = () => {
     };
   }, []);
 
+
   useEffect(() => {
     const startAudio = () => {
       if (!isGamePaused && bgmRef.current?.paused) {
@@ -236,7 +237,7 @@ const DivisionQuest: React.FC = () => {
                 MAIN MENU
               </h1>
               <button className="pixel-font menu-btn" onClick={() => { setGameMode('division'); setStage('LOADING_DIV'); }}>DIVISION ALGORITHM</button>
-              <button className="pixel-font menu-btn" onClick={() => { setGameMode('euclidian'); setStage('LOADING_EUC'); }}>EUCLIDIAN ALGORITHM</button>
+              <button className="pixel-font menu-btn" onClick={() => { setGameMode('euclidian'); setStage('LOADING_EUC'); }}>EUCLIDEAN ALGORITHM</button>
               <p className="pixel-font menu-controls-text">Controls: JUMP = UP/SPACE<br/>PAUSE = P/ESC</p>
             </div>
           </div>
@@ -265,7 +266,7 @@ const DivisionQuest: React.FC = () => {
         {stage === 'LOADING_EUC' && (
           <div className="retro-modal animate-entrance">
             <div className="retro-modal-inner left-align">
-              <h2 className="pixel-font loading-heading">EUCLIDIAN ALGORITHM</h2>
+              <h2 className="pixel-font loading-heading">EUCLIDEAN ALGORITHM</h2>
               <div className="standard-font loading-description euclidian">
                 <p className="desc-paragraph bold">The Euclidean Algorithm</p>
                 <p className="desc-paragraph">Let m and n be positive integers with n ≤ m. Let</p>

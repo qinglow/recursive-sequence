@@ -369,7 +369,7 @@ const CollatzSequence: React.FC = () => {
             
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', borderBottom: '1px dotted #ccc', paddingBottom: '10px', marginBottom: '10px' }}>
               <span>Input Initial Value</span>
-              <strong>{inputValue ? parseInt(inputValue, 10).toLocaleString('en-US') : '---'}</strong>
+              <strong>{inputValue ? parseInt(inputValue, 10).toString() : '---'}</strong>
             </div>
 
             <div style={{ minHeight: '60px' }}>
@@ -383,7 +383,7 @@ const CollatzSequence: React.FC = () => {
                   {/* FIXED: Scrollable area with word-break for long sequences + formatting */}
                   <div className="receipt-scroll" style={{ maxHeight: '120px', overflowY: 'auto', paddingRight: '5px' }}>
                     <p className="pixel-font" style={{ textAlign: 'right', lineHeight: '1.8', fontSize: '9px', wordBreak: 'break-word', margin: 0 }}>
-                      {sequence.map(num => num.toLocaleString('en-US')).join(', ')}
+                      {sequence.map(num => num.toString()).join(', ')}
                     </p>
                   </div>
 
@@ -421,7 +421,7 @@ const CollatzSequence: React.FC = () => {
                 <input 
                   type="text" 
                   inputMode="numeric"
-                  value={inputValue ? parseInt(inputValue, 10).toLocaleString('en-US') : ''}
+                  value={inputValue ? parseInt(inputValue, 10).toString() : ''}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     // Strip commas to get the raw number
                     const rawValue = e.target.value.replace(/,/g, '');

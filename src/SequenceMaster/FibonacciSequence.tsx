@@ -32,13 +32,13 @@ const FibonacciSequence: React.FC = () => {
             if (targetTerm >= 1) seq.push(1n);
 
             // Loop from index 2 up to and including the target term to generate the rest of the sequence
-            for (let i = 2; i <= targetTerm; i++) {
+            for (let i = 2; i <= targetTerm-1; i++) {
                 // Each new number is the sum of the previous two numbers in the sequence
                 seq.push(seq[i - 1] + seq[i - 2]);
             }
 
             // Convert each bigint in the sequence to a formatted string with commas, then join them with ', ' separator
-            setComputedSequence(seq.map(num => num.toLocaleString('en-US')).join(', '));
+            setComputedSequence(seq.map(num => num.toString()).join(', '));
             // Set the loading state to false to re-enable the button and indicate processing is complete
             setIsComputing(false);
         }, 400);
@@ -71,7 +71,7 @@ const FibonacciSequence: React.FC = () => {
 
             {/* Controls Section */}
             <div className="lucas-controls" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center', marginTop: '15px' }}>
-                <span>Sequence Term (n):</span>
+                <span>Sequence Term:</span>
                 <input
                     aria-label='Target Term'
                     type="number"
@@ -103,7 +103,7 @@ const FibonacciSequence: React.FC = () => {
                     )}
                     {computedSequence && (
                         <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                            <div>The Fibonacci sequence up to term {targetTerm}:</div>
+                            <div>The Fibonacci sequence are:</div>
                             
                             <div style={{ 
                                 marginTop: '5px', 
